@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role-dto';
 import { Role } from './roles.entity';
 import { RolesService } from './roles.service';
@@ -10,5 +10,10 @@ export class RolesController {
   @Post()
   createRole(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
     return this.rolesService.createRole(createRoleDto);
+  }
+
+  @Delete(':id')
+  deleteRole(@Param('id') id: number): Promise<void> {
+    return this.rolesService.deleteRole(id);
   }
 }

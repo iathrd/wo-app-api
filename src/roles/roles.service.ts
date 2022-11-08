@@ -22,4 +22,9 @@ export class RolesService {
       throw new NotFoundException('id doest exist');
     }
   }
+
+  async findRole(id: number): Promise<Role> {
+    const result = await this.roleRepository.findOne({ where: { id } });
+    return result;
+  }
 }

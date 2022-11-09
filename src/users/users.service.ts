@@ -11,7 +11,7 @@ export class UsersService {
     private userRepository: UserRepository,
   ) {}
 
-  createUser(createUserDto: CreateUserDto): Promise<User> {
+  createUser(createUserDto: CreateUserDto): Promise<void> {
     return this.userRepository.createUser(createUserDto);
   }
 

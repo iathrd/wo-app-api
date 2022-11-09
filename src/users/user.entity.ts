@@ -1,7 +1,9 @@
+import { Role } from 'src/roles/roles.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -32,4 +34,7 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   public updated_at: Date;
+
+  @OneToOne(() => Role, (role) => role.id)
+  role: Role;
 }

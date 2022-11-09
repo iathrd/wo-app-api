@@ -1,8 +1,10 @@
+import { type } from 'os';
 import { Role } from 'src/roles/roles.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -35,6 +37,6 @@ export class User {
   })
   public updated_at: Date;
 
-  @OneToOne(() => Role, (role) => role.id)
-  role: Role;
+  @ManyToOne(() => Role)
+  role: number;
 }

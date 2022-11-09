@@ -1,11 +1,9 @@
-import { type } from 'os';
 import { Role } from 'src/roles/roles.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -37,6 +35,6 @@ export class User {
   })
   public updated_at: Date;
 
-  @ManyToOne(() => Role)
+  @ManyToOne(() => Role, { eager: true })
   role: number;
 }

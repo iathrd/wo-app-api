@@ -12,5 +12,5 @@ export class CreateUserDto {
   email: string;
 
   @MinLength(1)
-  roleId: number;
+  role: number;
 }

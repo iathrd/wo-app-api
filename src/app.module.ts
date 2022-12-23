@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
-import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { UsersModule } from './users/users.module';
       autoLoadEntities: true,
     }),
     RolesModule,
-    UsersModule,
     AuthModule,
   ],
 })

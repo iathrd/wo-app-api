@@ -8,12 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { AuthService } from './auth.service';
 import { RoleEnum } from './dto/role.enum';
 import { SignInDto } from './dto/signin.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 import { HasRoles } from './roles.decorator';
 import { User } from './user.entity';
 

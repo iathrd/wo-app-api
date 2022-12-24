@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { CreateRoleDto } from './dto/create-role-dto';
 import { Role } from './roles.entity';
 import { RolesService } from './roles.service';

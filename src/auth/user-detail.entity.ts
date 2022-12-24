@@ -1,26 +1,36 @@
-import { Role } from 'src/roles/roles.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ unique: true })
-  username: string;
+export class UserDetail {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column()
-  password: string;
+  picture: string;
 
   @Column()
-  email: string;
+  phoneNumber: string;
+
+  @Column()
+  birtDate: Date;
+
+  @Column()
+  province: string;
+
+  @Column()
+  city: string;
+
+  @Column()
+  address: string;
+
+  @Column()
+  postCode: number;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -34,7 +44,4 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   public updatedAt: Date;
-
-  @ManyToOne(() => Role, { eager: true })
-  role: number;
 }

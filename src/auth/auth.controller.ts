@@ -8,10 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { AuthService } from './auth.service';
+import { RoleEnum } from './dto/role.enum';
 import { SignInDto } from './dto/signin.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
+import { HasRoles } from './roles.decorator';
 import { User } from './user.entity';
 
 @Controller('auth')
@@ -29,13 +32,14 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @HasRoles(RoleEnum.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
   }
 
-  @Post('signup')
+  @Post('/signup')
   createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
     return this.authService.createUser(createUserDto);
   }

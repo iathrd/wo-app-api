@@ -24,6 +24,8 @@ export class UserRepository extends Repository<User> {
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Username already exist');
+      } else if (error.code === 'ER_DUP_ENTRY') {
+        throw new ConflictException('Username already exist');
       } else {
         throw new InternalServerErrorException();
       }

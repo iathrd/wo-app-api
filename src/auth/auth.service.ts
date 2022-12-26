@@ -6,12 +6,16 @@ import { SignInDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { UserDetailRepository } from './user-detail.repository';
+import { CreateDetailUser } from './dto/detail-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @InjectRepository(UserDetailRepository)
+    private userDetailRepository: UserDetailRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -49,5 +53,12 @@ export class AuthService {
     });
 
     return user;
+  }
+
+  createUserDetail(
+    createDetailUser: CreateDetailUser,
+    user: User,
+  ): Promise<void> {
+    return this.userDetailRepository.craeteUserDetail(createDetailUser, user);
   }
 }

@@ -7,12 +7,15 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { RoleEnum } from 'src/auth/dto/role.enum';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { HasRoles } from 'src/auth/roles.decorator';
 import { CreateRoleDto } from './dto/create-role-dto';
 import { Role } from './roles.entity';
 import { RolesService } from './roles.service';
 
 @Controller('roles')
+@HasRoles(RoleEnum.Admin)
 @UseGuards(JwtAuthGuard)
 export class RolesController {
   constructor(private rolesService: RolesService) {}

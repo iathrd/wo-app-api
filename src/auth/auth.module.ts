@@ -8,10 +8,11 @@ import { LocalStrategy } from './local.stategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constant';
 import { JwtStrategy } from './jwt.strategy';
+import { UserDetailRepository } from './user-detail.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([UserRepository, UserDetailRepository]),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,

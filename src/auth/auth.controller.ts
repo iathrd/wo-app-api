@@ -5,16 +5,18 @@ import {
   Param,
   Post,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { AuthService } from './auth.service';
-import { RoleEnum } from './dto/role.enum';
+import { CreateDetailUser } from './dto/detail-user.dto';
 import { SignInDto } from './dto/signin.dto';
+import { GetUser } from './get-user.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
-import { HasRoles } from './roles.decorator';
 import { User } from './user.entity';
 
 @Controller('auth')
@@ -32,13 +34,6 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @HasRoles(RoleEnum.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
-
   @Post('/signup')
   createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
     return this.authService.createUser(createUserDto);
@@ -47,5 +42,16 @@ export class AuthController {
   @Get('/users/:id')
   getUser(@Param('id') id: string): Promise<User> {
     return this.authService.getUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/users/detail')
+  @UseInterceptors(FileInterceptor('file'))
+  createUserDetail(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createUserDetailDto: CreateDetailUser,
+    @GetUser() user: User,
+  ) {
+    return this.authService.createUserDetail(createUserDetailDto, user);
   }
 }

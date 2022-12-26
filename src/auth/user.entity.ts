@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserDetail } from './user-detail.entity';
 
 @Entity()
 export class User {
@@ -34,6 +35,9 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   public updatedAt: Date;
+
+  @ManyToOne(() => UserDetail, { eager: true })
+  userDetail: string;
 
   @ManyToOne(() => Role, { eager: true })
   role: number;

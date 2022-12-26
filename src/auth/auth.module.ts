@@ -9,9 +9,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { UserDetailRepository } from './user-detail.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     ConfigModule,
     TypeOrmModule.forFeature([UserRepository, UserDetailRepository]),
     PassportModule,

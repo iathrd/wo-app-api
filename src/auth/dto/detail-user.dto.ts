@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 export class CreateDetailUser {
-  picture: File;
+  picture: string;
 
   @IsOptional()
   @IsString()

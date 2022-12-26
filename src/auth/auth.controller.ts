@@ -47,11 +47,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('/users/detail')
   @UseInterceptors(FileInterceptor('file'))
-  createUserDetail(
+  async createUserDetail(
     @UploadedFile() file: Express.Multer.File,
     @Body() createUserDetailDto: CreateDetailUser,
     @GetUser() user: User,
   ) {
-    return this.authService.createUserDetail(createUserDetailDto, user);
+    return this.authService.createUserDetail(createUserDetailDto, user, file);
   }
 }

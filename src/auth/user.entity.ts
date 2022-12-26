@@ -37,7 +37,7 @@ export class User {
   public updatedAt: Date;
 
   @ManyToOne(() => UserDetail, { eager: true })
-  userDetail: string;
+  userDetail: number;
 
   @ManyToOne(() => Role, { eager: true })
   role: number;

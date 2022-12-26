@@ -2,35 +2,35 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class UserDetail {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
-  @Column()
-  picture?: string;
+  @Column({ nullable: true, type: 'text' })
+  picture!: string;
 
-  @Column()
-  phoneNumber?: string;
+  @Column({ nullable: true, type: 'varchar' })
+  phoneNumber!: string;
 
-  @Column()
-  birtDate?: Date;
+  @Column({ nullable: true, type: 'date' })
+  birtDate!: Date;
 
-  @Column()
-  province?: string;
+  @Column({ nullable: true, type: 'varchar' })
+  province!: string;
 
-  @Column()
-  city?: string;
+  @Column({ nullable: true, type: 'varchar' })
+  city!: string;
 
-  @Column()
-  address?: string;
+  @Column({ nullable: true, type: 'varchar' })
+  address!: string;
 
-  @Column()
-  postCode?: number;
+  @Column({ nullable: true, type: 'integer' })
+  postCode!: number;
 
   @CreateDateColumn({
     type: 'timestamp',

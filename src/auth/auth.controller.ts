@@ -18,7 +18,7 @@ import { SignInDto } from './dto/signin.dto';
 import { GetUser } from './get-user.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
 
 @Controller('auth')
 export class AuthController {

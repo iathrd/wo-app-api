@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
 import * as argon2 from 'argon2';
 import {
   ConflictException,

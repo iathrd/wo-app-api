@@ -8,7 +8,7 @@ import * as argon2 from 'argon2';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignInDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { UserDetailRepository } from './user-detail.repository';
 import { CreateDetailUserDto } from './dto/detail-user.dto';

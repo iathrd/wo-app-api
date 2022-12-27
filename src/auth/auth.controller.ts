@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { AuthService } from './auth.service';
 import { CreateDetailUser } from './dto/detail-user.dto';
 import { SignInDto } from './dto/signin.dto';
@@ -21,7 +22,10 @@ import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private cloudinary: CloudinaryService,
+  ) {}
 
   @Post()
   signIn(@Body() signInDto: SignInDto) {

@@ -12,11 +12,8 @@ import { User } from './user.entity';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { UserDetailRepository } from './user-detail.repository';
 import { CreateDetailUser } from './dto/detail-user.dto';
-import { catchError, firstValueFrom } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
-import * as FormData from 'form-data';
 import { UserDetail } from './user-detail.entity';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class AuthService {
@@ -26,8 +23,7 @@ export class AuthService {
     @InjectRepository(UserDetailRepository)
     private userDetailRepository: UserDetailRepository,
     private jwtService: JwtService,
-    private readonly httpService: HttpService,
-    private configService: ConfigService,
+    private cloudinary: CloudinaryService,
   ) {}
 
   async validateUser(signInDto: SignInDto): Promise<User | null> {
@@ -71,26 +67,13 @@ export class AuthService {
     user: User,
     file: Express.Multer.File,
   ): Promise<UserDetail> {
-    const formData = new FormData();
-    formData.append('image', file.buffer.toString('base64'));
-    const { data } = await firstValueFrom(
-      this.httpService
-        .post(
-          `https://api.imgbb.com/1/upload?expiration=600&key=${this.configService.get(
-            'IMGBB_KEY',
-          )}`,
-          formData,
-        )
-        .pipe(
-          catchError(() => {
-            throw new InternalServerErrorException('Image failed to uploaded!');
-          }),
-        ),
-    );
+    const data = await this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
     if (data) {
       const userDetail = this.userDetailRepository.create({
         ...createDetailUser,
-        picture: data.data.url,
+        picture: data.url,
       });
 
       try {

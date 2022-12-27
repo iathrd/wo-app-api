@@ -10,9 +10,11 @@ import { JwtStrategy } from './jwt.strategy';
 import { UserDetailRepository } from './user-detail.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
+    CloudinaryModule,
     HttpModule,
     ConfigModule,
     TypeOrmModule.forFeature([UserRepository, UserDetailRepository]),

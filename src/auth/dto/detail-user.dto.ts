@@ -1,13 +1,12 @@
 import {
   IsDate,
-  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 
-export class CreateDetailUser {
+export class CreateDetailUserDto {
   picture: string;
 
   @IsOptional()
@@ -36,8 +35,8 @@ export class CreateDetailUser {
   address: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   @MinLength(5)
   @MaxLength(5)
-  postCode: number;
+  postCode: string;
 }

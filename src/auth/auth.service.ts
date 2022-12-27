@@ -11,8 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from './user.entity';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { UserDetailRepository } from './user-detail.repository';
-import { CreateDetailUser } from './dto/detail-user.dto';
-import { UserDetail } from './user-detail.entity';
+import { CreateDetailUserDto } from './dto/detail-user.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
@@ -62,34 +61,76 @@ export class AuthService {
     return user;
   }
 
+  async saveDetailUser(data: CreateDetailUserDto, user: User) {
+    const userDetailData = this.userDetailRepository.create({
+      ...data,
+    });
+    try {
+      const userDetail = await this.userDetailRepository.save(userDetailData);
+      await this.userRepository.save({
+        ...user,
+        userDetail: userDetail,
+      });
+      return userDetail;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async editDetailUser(data: CreateDetailUserDto) {
+    const saveData = await this.userDetailRepository.save(data);
+    return saveData;
+  }
+
   async createUserDetail(
-    createDetailUser: CreateDetailUser,
+    createDetailUser: CreateDetailUserDto,
     user: User,
     file: Express.Multer.File,
-  ): Promise<UserDetail> {
-    const data = await this.cloudinary.uploadImage(file).catch(() => {
-      throw new BadRequestException('Invalid file type.');
-    });
-    if (data) {
-      const userDetail = this.userDetailRepository.create({
-        ...createDetailUser,
-        picture: data.url,
-      });
-
+  ) {
+    //if user detail already exist in user parameter
+    if (user.userDetail) {
       try {
-        const insertUserDetail = await this.userDetailRepository.save(
-          userDetail,
-        );
-        await this.userRepository.save({
-          ...user,
-          userDetail: insertUserDetail.id,
+        let data = await this.userDetailRepository.findOne({
+          where: { id: user.userDetail.id },
         });
-        return insertUserDetail;
+
+        //if file is not null
+        if (file) {
+          const dataImage = await this.cloudinary
+            .uploadImage(file)
+            .catch(() => {
+              throw new BadRequestException('Invalid file type.');
+            });
+          data = { ...data, ...createDetailUser, picture: dataImage.url };
+          return this.editDetailUser(data);
+        }
+
+        //if file is null
+        data = { ...data, ...createDetailUser };
+        return this.editDetailUser(data);
       } catch (error) {
         throw new InternalServerErrorException();
       }
-    } else {
-      throw new BadRequestException();
     }
+
+    //if file is not null
+    if (file) {
+      const data = await this.cloudinary.uploadImage(file).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+
+      //if image succes to upload to cloudinary
+      if (data) {
+        return this.saveDetailUser(
+          { ...createDetailUser, picture: data.url },
+          user,
+        );
+      } else {
+        throw new BadRequestException();
+      }
+    }
+
+    //if file is null
+    return this.saveDetailUser(createDetailUser, user);
   }
 }

@@ -29,8 +29,8 @@ export class UserDetail {
   @Column({ nullable: true, type: 'varchar' })
   address!: string;
 
-  @Column({ nullable: true, type: 'integer' })
-  postCode!: number;
+  @Column({ nullable: true, type: 'varchar' })
+  postCode!: string;
 
   @CreateDateColumn({
     type: 'timestamp',

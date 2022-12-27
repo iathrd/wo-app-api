@@ -13,7 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { AuthService } from './auth.service';
-import { CreateDetailUser } from './dto/detail-user.dto';
+import { CreateDetailUserDto } from './dto/detail-user.dto';
 import { SignInDto } from './dto/signin.dto';
 import { GetUser } from './get-user.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
@@ -53,7 +53,7 @@ export class AuthController {
   @UseInterceptors(FileInterceptor('file'))
   async createUserDetail(
     @UploadedFile() file: Express.Multer.File,
-    @Body() createUserDetailDto: CreateDetailUser,
+    @Body() createUserDetailDto: CreateDetailUserDto,
     @GetUser() user: User,
   ) {
     return this.authService.createUserDetail(createUserDetailDto, user, file);

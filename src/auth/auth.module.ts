@@ -11,13 +11,18 @@ import { UserDetailRepository } from './user-detail.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { VendorRepository } from './vendor.repository';
 
 @Module({
   imports: [
     CloudinaryModule,
     HttpModule,
     ConfigModule,
-    TypeOrmModule.forFeature([UserRepository, UserDetailRepository]),
+    TypeOrmModule.forFeature([
+      UserRepository,
+      UserDetailRepository,
+      VendorRepository,
+    ]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

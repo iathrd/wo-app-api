@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { AuthService } from './auth.service';
 import { CreateDetailUserDto } from './dto/detail-user.dto';
 import { SignInDto } from './dto/signin.dto';
@@ -19,13 +18,12 @@ import { GetUser } from './get-user.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { User } from './entity/user.entity';
+import { CreateVendorDto } from './dto/create-vendor.dto';
+import { UserDetail } from './entity/user-detail.entity';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private cloudinary: CloudinaryService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post()
   signIn(@Body() signInDto: SignInDto) {
@@ -34,7 +32,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
+  async login(@Request() req): Promise<{ access_token: string }> {
     return this.authService.login(req.user);
   }
 
@@ -55,7 +53,16 @@ export class AuthController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createUserDetailDto: CreateDetailUserDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<UserDetail> {
     return this.authService.createUserDetail(createUserDetailDto, user, file);
+  }
+
+  @Post('/signup/vendor')
+  @UseInterceptors(FileInterceptor('file'))
+  signupVendor(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createVendorDto: CreateVendorDto,
+  ): Promise<void> {
+    return this.authService.createVendor(createVendorDto, file);
   }
 }

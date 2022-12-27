@@ -40,6 +40,7 @@ export class CreateVendorDto {
   @IsString()
   bankNumber;
 
-  @IsString()
+  role: number;
+
   ktpPicture: string;
 }

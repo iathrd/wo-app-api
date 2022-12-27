@@ -13,6 +13,10 @@ import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { UserDetailRepository } from './user-detail.repository';
 import { CreateDetailUserDto } from './dto/detail-user.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CreateVendorDto } from './dto/create-vendor.dto';
+import { VendorRepository } from './vendor.repository';
+import { UserDetail } from './entity/user-detail.entity';
+import { Vendor } from './entity/vendor.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,11 +25,13 @@ export class AuthService {
     private userRepository: UserRepository,
     @InjectRepository(UserDetailRepository)
     private userDetailRepository: UserDetailRepository,
+    @InjectRepository(VendorRepository)
+    private vendorRepository: VendorRepository,
     private jwtService: JwtService,
     private cloudinary: CloudinaryService,
   ) {}
 
-  async validateUser(signInDto: SignInDto): Promise<User | null> {
+  async validateUser(signInDto: SignInDto): Promise<User | Vendor | null> {
     const { username, password } = signInDto;
     const user = await this.userRepository.findOne({ where: { username } });
 
@@ -36,12 +42,26 @@ export class AuthService {
       if (validatePassword) {
         return user;
       }
+    } else if (!user) {
+      const vendor = await this.vendorRepository.findOne({
+        where: { username },
+      });
+      if (vendor) {
+        const { password: userPassword } = vendor;
+        const validatePassword = await argon2.verify(userPassword, password);
+
+        if (validatePassword) {
+          return vendor;
+        }
+
+        return null;
+      }
     }
 
     return null;
   }
 
-  async login(user: any) {
+  async login(user: any): Promise<{ access_token: string }> {
     const payload = { username: user.username, sub: user.userId };
     return {
       access_token: this.jwtService.sign(payload),
@@ -61,7 +81,10 @@ export class AuthService {
     return user;
   }
 
-  async saveDetailUser(data: CreateDetailUserDto, user: User) {
+  async saveDetailUser(
+    data: CreateDetailUserDto,
+    user: User,
+  ): Promise<UserDetail> {
     const userDetailData = this.userDetailRepository.create({
       ...data,
     });
@@ -77,7 +100,7 @@ export class AuthService {
     }
   }
 
-  async editDetailUser(data: CreateDetailUserDto) {
+  async editDetailUser(data: CreateDetailUserDto): Promise<UserDetail> {
     const saveData = await this.userDetailRepository.save(data);
     return saveData;
   }
@@ -86,7 +109,7 @@ export class AuthService {
     createDetailUser: CreateDetailUserDto,
     user: User,
     file: Express.Multer.File,
-  ) {
+  ): Promise<UserDetail> {
     //if user detail already exist in user parameter
     if (user.userDetail) {
       try {
@@ -132,5 +155,23 @@ export class AuthService {
 
     //if file is null
     return this.saveDetailUser(createDetailUser, user);
+  }
+
+  async createVendor(
+    createVendorDto: CreateVendorDto,
+    file: Express.Multer.File,
+  ): Promise<void> {
+    const dataImage = await this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
+
+    if (dataImage) {
+      return this.vendorRepository.careteVendor({
+        ...createVendorDto,
+        ktpPicture: dataImage.url,
+      });
+    }
+
+    throw new InternalServerErrorException();
   }
 }

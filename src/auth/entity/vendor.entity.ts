@@ -1,13 +1,15 @@
+import { Role } from 'src/roles/roles.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Vendor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -45,10 +47,13 @@ export class User {
   bankName: string;
 
   @Column()
-  bankNumber;
+  bankNumber: string;
 
   @Column()
   ktpPicture: string;
+
+  @ManyToOne(() => Role, { eager: true })
+  role: number;
 
   @CreateDateColumn({
     type: 'timestamp',

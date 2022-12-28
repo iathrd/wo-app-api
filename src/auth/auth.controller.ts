@@ -90,4 +90,13 @@ export class AuthController {
   async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
     return this.authService.verifyEmail(verifyEmailDto);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/ressetPassword')
+  async ressetPassword(
+    @Body() data: { password: string },
+    @GetUser() user: User | Vendor,
+  ) {
+    return this.authService.ressetPassword(data.password, user);
+  }
 }

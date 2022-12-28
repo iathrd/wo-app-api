@@ -23,6 +23,7 @@ import { generateNumber } from 'src/common/helpers/number.helper';
 import { SendinblueService } from 'src/sendinblue/sendinblue.service';
 import { VerifyEmailDto } from './dto/verification-email.dto';
 import { RoleRepository } from 'src/roles/roles.repository';
+import { RoleEnum } from './dto/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -297,12 +298,17 @@ export class AuthService {
     }
   }
 
-  // async ressetPassword(password: string, user: User | Vendor): Promise<void> {
-  //   try {
-  //     const hashedPassword = await argon2.hash(password);
+  async ressetPassword(password: string, user: User | Vendor): Promise<void> {
+    try {
+      const hashedPassword = await argon2.hash(password);
 
-  //   } catch (error) {
-  //     throw new InternalServerErrorException();
-  //   }
-  // }
+      if (user.role.name === RoleEnum.Partner) {
+        await this.vendorRepository.save({ ...user, password: hashedPassword });
+      } else if (user.role.name === RoleEnum.User) {
+        await this.userRepository.save({ ...user, password: hashedPassword });
+      }
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
 }

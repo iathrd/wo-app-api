@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
   IsString,
@@ -19,7 +20,7 @@ export class EditVendorDto {
 
   @IsOptional()
   @IsEmail()
-  companyEmail: string;
+  email: string;
 
   @IsOptional()
   @IsEmail()
@@ -53,4 +54,24 @@ export class EditVendorDto {
   @IsOptional()
   @IsString()
   bankNumber;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  ward: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  district: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  province: string;
 }

@@ -1,4 +1,10 @@
-import { IsEmail, IsPhoneNumber, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsPhoneNumber,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class CreateVendorDto {
   @IsString()
@@ -10,12 +16,15 @@ export class CreateVendorDto {
   username: string;
 
   @MinLength(8)
+  @IsNotEmpty()
   password: string;
 
   @IsEmail()
-  companyEmail: string;
+  @IsNotEmpty()
+  email: string;
 
   @IsEmail()
+  @IsNotEmpty()
   businessEmail: string;
 
   @IsString()
@@ -23,22 +32,44 @@ export class CreateVendorDto {
   responsible: string;
 
   @IsPhoneNumber('ID')
+  @MinLength(10)
   phoneNumber: string;
 
   @IsPhoneNumber('ID')
+  @MinLength(10)
   whatsappNumber: string;
 
   @IsPhoneNumber('ID')
+  @MinLength(10)
   companyPhoneNumber: string;
 
   @IsPhoneNumber('ID')
+  @MinLength(10)
   companyWhatsappNumber: string;
 
   @IsString()
+  @MinLength(3)
   bankName: string;
 
   @IsString()
+  @MinLength(5)
   bankNumber;
+
+  @IsString()
+  @IsNotEmpty()
+  ward: string;
+
+  @IsString()
+  @IsNotEmpty()
+  district: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  province: string;
 
   role: number;
 

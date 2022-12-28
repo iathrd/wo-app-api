@@ -23,7 +23,7 @@ export class Vendor {
   password: string;
 
   @Column()
-  companyEmail: string;
+  email: string;
 
   @Column()
   businessEmail: string;
@@ -51,6 +51,18 @@ export class Vendor {
 
   @Column()
   ktpPicture: string;
+
+  @Column()
+  ward: string;
+
+  @Column()
+  district: string;
+
+  @Column()
+  city: string;
+
+  @Column()
+  province: string;
 
   @ManyToOne(() => Role, { eager: true })
   role: number;

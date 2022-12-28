@@ -27,6 +27,7 @@ import { HasRoles } from './roles.decorator';
 import { RoleEnum } from './dto/role.enum';
 import { Vendor } from './entity/vendor.entity';
 import { ChangeDataDto } from './dto/change-data.dto';
+import { VerifyEmailDto } from './dto/verification-email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -83,5 +84,10 @@ export class AuthController {
   @Post('/ressetData')
   ressetData(@Body() changeDataDto: ChangeDataDto) {
     return this.authService.ressetData(changeDataDto);
+  }
+
+  @Post('/verifyEmail')
+  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
+    return this.authService.verifyEmail(verifyEmailDto);
   }
 }

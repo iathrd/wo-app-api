@@ -21,6 +21,7 @@ import { EditVendorDto } from './dto/edit-vendor-dto';
 import { ChangeDataDto } from './dto/change-data.dto';
 import { generateNumber } from 'src/common/helpers/number.helper';
 import { SendinblueService } from 'src/sendinblue/sendinblue.service';
+import { VerifyEmailDto } from './dto/verification-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -225,8 +226,8 @@ export class AuthService {
 
         const response = await this.sendinBlueService.sendEmail({
           sender: {
-            name: 'Iqbal Athorid',
-            email: 'iqbalathorid17@gmail.com',
+            name: 'Dream Weding',
+            email: 'dreamweding3@gmail.com',
           },
           to: [
             {
@@ -234,9 +235,9 @@ export class AuthService {
               name: user.username,
             },
           ],
-          subject: 'Hello world',
+          subject: 'Resset Password',
           htmlContent: `<html><head></head><body>
-          <h5>Hello ${username}  ,</h5>
+          <h5>Hello ${user.username}  ,</h5>
           <h5> There was a request to change your password!</h5>
           <h5>If you did not make this request then please ignore this email.</h5>
           Your verification number is <b><h1>${generatedNumber}</h1></b></p></body></html>`,
@@ -245,11 +246,34 @@ export class AuthService {
         if (response) {
           const hashedVerification = await argon2.hash(generatedNumber);
 
-          return { verificationCode: hashedVerification };
+          return {
+            verificationCode: hashedVerification,
+            username: user.username,
+          };
         }
 
         throw new BadRequestException();
       }
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async verifyEmail(
+    verifyEmailDto: VerifyEmailDto,
+  ): Promise<{ token: string }> {
+    try {
+      const { username, verificationCode, code } = verifyEmailDto;
+
+      const valid = await argon2.verify(verificationCode, code);
+
+      if (valid) {
+        return {
+          token: this.jwtService.sign({ username }, { expiresIn: '5m' }),
+        };
+      }
+
+      throw new BadRequestException('Invalid code!');
     } catch (error) {
       throw new InternalServerErrorException();
     }

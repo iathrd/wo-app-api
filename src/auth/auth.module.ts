@@ -13,6 +13,7 @@ import { HttpModule } from '@nestjs/axios';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { VendorRepository } from './vendor.repository';
 import { SendinblueModule } from 'src/sendinblue/sendinblue.module';
+import { RoleRepository } from 'src/roles/roles.repository';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SendinblueModule } from 'src/sendinblue/sendinblue.module';
       UserRepository,
       UserDetailRepository,
       VendorRepository,
+      RoleRepository,
     ]),
     PassportModule,
     JwtModule.registerAsync({

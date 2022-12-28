@@ -6,16 +6,17 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { Role } from 'src/roles/roles.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async createUser(createUserDto: CreateUserDto): Promise<void> {
-    const { password, role } = createUserDto;
+  async createUser(createUserDto: CreateUserDto, role: Role): Promise<void> {
+    const { password } = createUserDto;
     const hashedPassword = await argon2.hash(password);
 
     const user = this.create({
       ...createUserDto,
-      role: +role,
+      role,
       password: hashedPassword,
     });
 

@@ -40,5 +40,5 @@ export class User {
   userDetail: UserDetail;
 
   @ManyToOne(() => Role, { eager: true })
-  role: number;
+  role: Role;
 }

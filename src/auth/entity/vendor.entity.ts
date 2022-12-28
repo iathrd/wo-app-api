@@ -65,7 +65,7 @@ export class Vendor {
   province: string;
 
   @ManyToOne(() => Role, { eager: true })
-  role: number;
+  role: Role;
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -22,6 +22,7 @@ import { ChangeDataDto } from './dto/change-data.dto';
 import { generateNumber } from 'src/common/helpers/number.helper';
 import { SendinblueService } from 'src/sendinblue/sendinblue.service';
 import { VerifyEmailDto } from './dto/verification-email.dto';
+import { RoleRepository } from 'src/roles/roles.repository';
 
 @Injectable()
 export class AuthService {
@@ -32,6 +33,8 @@ export class AuthService {
     private userDetailRepository: UserDetailRepository,
     @InjectRepository(VendorRepository)
     private vendorRepository: VendorRepository,
+    @InjectRepository(RoleRepository)
+    private roleRepository: RoleRepository,
     private jwtService: JwtService,
     private sendinBlueService: SendinblueService,
     private cloudinary: CloudinaryService,
@@ -92,8 +95,14 @@ export class AuthService {
     };
   }
 
-  createUser(createUserDto: CreateUserDto): Promise<void> {
-    return this.userRepository.createUser(createUserDto);
+  async createUser(createUserDto: CreateUserDto): Promise<void> {
+    const role = await this.roleRepository.findOne({ id: createUserDto.role });
+
+    if (role) {
+      return this.userRepository.createUser(createUserDto, role);
+    }
+
+    throw new InternalServerErrorException();
   }
 
   async getUser(id: string): Promise<User> {
@@ -185,15 +194,24 @@ export class AuthService {
     createVendorDto: CreateVendorDto,
     file: Express.Multer.File,
   ): Promise<void> {
-    const dataImage = await this.cloudinary.uploadImage(file).catch(() => {
-      throw new BadRequestException('Invalid file type.');
+    const role = await this.roleRepository.findOne({
+      id: createVendorDto.role,
     });
 
-    if (dataImage) {
-      return this.vendorRepository.careteVendor({
-        ...createVendorDto,
-        ktpPicture: dataImage.url,
+    if (role) {
+      const dataImage = await this.cloudinary.uploadImage(file).catch(() => {
+        throw new BadRequestException('Invalid file type.');
       });
+
+      if (dataImage) {
+        return this.vendorRepository.careteVendor(
+          {
+            ...createVendorDto,
+            ktpPicture: dataImage.url,
+          },
+          role,
+        );
+      }
     }
 
     throw new InternalServerErrorException();
@@ -278,4 +296,13 @@ export class AuthService {
       throw new InternalServerErrorException();
     }
   }
+
+  // async ressetPassword(password: string, user: User | Vendor): Promise<void> {
+  //   try {
+  //     const hashedPassword = await argon2.hash(password);
+
+  //   } catch (error) {
+  //     throw new InternalServerErrorException();
+  //   }
+  // }
 }

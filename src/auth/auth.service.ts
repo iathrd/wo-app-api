@@ -17,6 +17,7 @@ import { CreateVendorDto } from './dto/create-vendor.dto';
 import { VendorRepository } from './vendor.repository';
 import { UserDetail } from './entity/user-detail.entity';
 import { Vendor } from './entity/vendor.entity';
+import { EditVendorDto } from './dto/edit-vendor-dto';
 
 @Injectable()
 export class AuthService {
@@ -173,5 +174,23 @@ export class AuthService {
     }
 
     throw new InternalServerErrorException();
+  }
+
+  async editVendor(
+    editVendorDto: EditVendorDto,
+    vendor: Vendor,
+  ): Promise<Vendor> {
+    try {
+      const findVendor = await this.vendorRepository.findOne({
+        username: vendor.username,
+      });
+
+      const data = { ...findVendor, ...editVendorDto };
+      await this.vendorRepository.save(data);
+
+      return data;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 }

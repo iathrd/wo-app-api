@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Request,
   UploadedFile,
   UseGuards,
@@ -20,6 +21,11 @@ import { LocalAuthGuard } from './guard/local-auth.guard';
 import { User } from './entity/user.entity';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UserDetail } from './entity/user-detail.entity';
+import { EditVendorDto } from './dto/edit-vendor-dto';
+import { RolesGuard } from './guard/roles.guard';
+import { HasRoles } from './roles.decorator';
+import { RoleEnum } from './dto/role.enum';
+import { Vendor } from './entity/vendor.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -64,5 +70,12 @@ export class AuthController {
     @Body() createVendorDto: CreateVendorDto,
   ): Promise<void> {
     return this.authService.createVendor(createVendorDto, file);
+  }
+
+  @HasRoles(RoleEnum.Partner)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put('/vendor')
+  editVendor(@Body() editVendorDto: EditVendorDto, @GetUser() vendor: Vendor) {
+    return this.authService.editVendor(editVendorDto, vendor);
   }
 }

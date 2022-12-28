@@ -12,9 +12,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { VendorRepository } from './vendor.repository';
+import { SendinblueModule } from 'src/sendinblue/sendinblue.module';
 
 @Module({
   imports: [
+    SendinblueModule,
     CloudinaryModule,
     HttpModule,
     ConfigModule,

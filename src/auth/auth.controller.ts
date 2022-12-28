@@ -26,6 +26,7 @@ import { RolesGuard } from './guard/roles.guard';
 import { HasRoles } from './roles.decorator';
 import { RoleEnum } from './dto/role.enum';
 import { Vendor } from './entity/vendor.entity';
+import { ChangeDataDto } from './dto/change-data.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -77,5 +78,10 @@ export class AuthController {
   @Put('/vendor')
   editVendor(@Body() editVendorDto: EditVendorDto, @GetUser() vendor: Vendor) {
     return this.authService.editVendor(editVendorDto, vendor);
+  }
+
+  @Post('/ressetData')
+  ressetData(@Body() changeDataDto: ChangeDataDto) {
+    return this.authService.ressetData(changeDataDto);
   }
 }

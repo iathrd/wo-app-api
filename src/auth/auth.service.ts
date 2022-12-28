@@ -18,6 +18,9 @@ import { VendorRepository } from './vendor.repository';
 import { UserDetail } from './entity/user-detail.entity';
 import { Vendor } from './entity/vendor.entity';
 import { EditVendorDto } from './dto/edit-vendor-dto';
+import { ChangeDataDto } from './dto/change-data.dto';
+import { generateNumber } from 'src/common/helpers/number.helper';
+import { SendinblueService } from 'src/sendinblue/sendinblue.service';
 
 @Injectable()
 export class AuthService {
@@ -29,8 +32,27 @@ export class AuthService {
     @InjectRepository(VendorRepository)
     private vendorRepository: VendorRepository,
     private jwtService: JwtService,
+    private sendinBlueService: SendinblueService,
     private cloudinary: CloudinaryService,
   ) {}
+
+  async findUser(username: string): Promise<User | Vendor> {
+    try {
+      const user = await this.userRepository.findOne({ username });
+
+      if (!user) {
+        const vendor = await this.vendorRepository.findOne({ username });
+        if (vendor) {
+          return vendor;
+        }
+        throw new InternalServerErrorException();
+      }
+
+      return user;
+    } catch {
+      throw new InternalServerErrorException();
+    }
+  }
 
   async validateUser(signInDto: SignInDto): Promise<User | Vendor | null> {
     const { username, password } = signInDto;
@@ -189,6 +211,45 @@ export class AuthService {
       await this.vendorRepository.save(data);
 
       return data;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async ressetData(changeDataDto: ChangeDataDto) {
+    const { username } = changeDataDto;
+    try {
+      const user = await this.findUser(username);
+      if (user) {
+        const generatedNumber = generateNumber();
+
+        const response = await this.sendinBlueService.sendEmail({
+          sender: {
+            name: 'Iqbal Athorid',
+            email: 'iqbalathorid17@gmail.com',
+          },
+          to: [
+            {
+              email: user.email,
+              name: user.username,
+            },
+          ],
+          subject: 'Hello world',
+          htmlContent: `<html><head></head><body>
+          <h5>Hello ${username}  ,</h5>
+          <h5> There was a request to change your password!</h5>
+          <h5>If you did not make this request then please ignore this email.</h5>
+          Your verification number is <b><h1>${generatedNumber}</h1></b></p></body></html>`,
+        });
+
+        if (response) {
+          const hashedVerification = await argon2.hash(generatedNumber);
+
+          return { verificationCode: hashedVerification };
+        }
+
+        throw new BadRequestException();
+      }
     } catch (error) {
       throw new InternalServerErrorException();
     }

@@ -281,21 +281,17 @@ export class AuthService {
   async verifyEmail(
     verifyEmailDto: VerifyEmailDto,
   ): Promise<{ token: string }> {
-    try {
-      const { username, verificationCode, code } = verifyEmailDto;
+    const { username, verificationCode, code } = verifyEmailDto;
 
-      const valid = await argon2.verify(verificationCode, code);
+    const valid = await argon2.verify(verificationCode, code);
 
-      if (valid) {
-        return {
-          token: this.jwtService.sign({ username }, { expiresIn: '5m' }),
-        };
-      }
-
-      throw new BadRequestException('Invalid code!');
-    } catch (error) {
-      throw new InternalServerErrorException();
+    if (valid) {
+      return {
+        token: this.jwtService.sign({ username }, { expiresIn: '5m' }),
+      };
     }
+
+    throw new BadRequestException('Invalid code!');
   }
 
   async ressetPassword(password: string, user: User | Vendor): Promise<void> {

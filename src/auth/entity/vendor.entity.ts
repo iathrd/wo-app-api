@@ -19,7 +19,7 @@ export class Vendor {
   @Column()
   username: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column()
@@ -43,13 +43,13 @@ export class Vendor {
   @Column()
   companyWhatsappNumber: string;
 
-  @Column()
+  @Column({ select: false })
   bankName: string;
 
-  @Column()
+  @Column({ select: false })
   bankNumber: string;
 
-  @Column()
+  @Column({ select: false })
   ktpPicture: string;
 
   @Column()

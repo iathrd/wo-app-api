@@ -12,25 +12,25 @@ export class UserDetail {
   id: number;
 
   @Column({ nullable: true, type: 'text' })
-  picture!: string;
+  picture: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  phoneNumber!: string;
+  phoneNumber: string;
 
   @Column({ nullable: true, type: 'date' })
-  birtDate!: Date;
+  birtDate: Date;
 
   @Column({ nullable: true, type: 'varchar' })
-  province!: string;
+  province: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  city!: string;
+  city: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  address!: string;
+  address: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  postCode!: string;
+  postCode: string;
 
   @CreateDateColumn({
     type: 'timestamp',

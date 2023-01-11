@@ -11,7 +11,9 @@ export class AdminService {
 
   async getAllVendor() {
     const query = this.vendorRepository.createQueryBuilder('vendor');
-    const data = await query.getMany();
+    const data = await query
+      .addSelect(['vendor.ktpPicture', 'vendor.bankName', 'vendor.bankNumber'])
+      .getMany();
 
     return data;
   }

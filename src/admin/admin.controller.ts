@@ -28,4 +28,9 @@ export class AdminController {
   ): Promise<Banner> {
     return this.adminService.createBanner(file, createBannerDto);
   }
+
+  @Get('/banner')
+  getBanner(): Promise<Banner[]> {
+    return this.adminService.getBanner();
+  }
 }

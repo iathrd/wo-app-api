@@ -61,4 +61,8 @@ export class AdminService {
       throw new InternalServerErrorException();
     }
   }
+
+  getBanner() {
+    return this.bannerRepository.getBanner();
+  }
 }

@@ -6,6 +6,7 @@ import { VendorRepository } from 'src/auth/vendor.repository';
 import { AssetRepository } from './asset.repository';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { BannerRepository } from './banner.repository';
+import { DetailPartnerRepository } from './detail-partner.repository';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { BannerRepository } from './banner.repository';
       VendorRepository,
       AssetRepository,
       BannerRepository,
+      DetailPartnerRepository,
     ]),
     CloudinaryModule,
   ],

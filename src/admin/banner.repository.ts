@@ -7,7 +7,6 @@ export class BannerRepository extends Repository<Banner> {
   async getBanner(): Promise<Banner[]> {
     try {
       const banner = this.find();
-
       return banner;
     } catch {
       throw new InternalServerErrorException();

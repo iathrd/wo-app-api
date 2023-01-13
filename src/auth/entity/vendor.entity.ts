@@ -1,3 +1,4 @@
+import { DetailPartner } from 'src/admin/entity/detail-partner.entity';
 import { Role } from 'src/roles/roles.entity';
 import {
   Column,
@@ -66,6 +67,9 @@ export class Vendor {
 
   @ManyToOne(() => Role, { eager: true })
   role: Role;
+
+  @ManyToOne(() => DetailPartner, { eager: true })
+  detail: DetailPartner;
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -19,7 +19,7 @@ export class Vendor {
   @Column()
   username: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column()

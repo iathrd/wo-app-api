@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Asset } from './asset.entity';
 
 @Entity()
 export class Banner {
@@ -22,6 +24,9 @@ export class Banner {
 
   @Column()
   endDate: Date;
+
+  @ManyToOne(() => Asset, { eager: true })
+  asset: Asset;
 
   @CreateDateColumn({
     type: 'timestamp',

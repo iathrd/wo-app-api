@@ -1,18 +1,16 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateBannerDto {
-  images: string;
-
   @IsNotEmpty()
   @IsString()
   name: string;
 
   @IsNotEmpty()
-  @IsString()
-  url: string;
+  startDate: Date;
 
   @IsNotEmpty()
-  startDate: Date;
+  @IsString()
+  url: string;
 
   @IsNotEmpty()
   endDate: Date;

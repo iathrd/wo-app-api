@@ -6,6 +6,7 @@ import { RolesModule } from './roles/roles.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { SendinblueModule } from './sendinblue/sendinblue.module';
 import { AdminModule } from './admin/admin.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AdminModule } from './admin/admin.module';
     CloudinaryModule,
     SendinblueModule,
     AdminModule,
+    ProductModule,
   ],
 })
 export class AppModule {}
